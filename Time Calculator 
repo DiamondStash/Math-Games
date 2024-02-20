@@ -1,0 +1,72 @@
+# Time Calculator
+
+# This program adds a duration to a start time and returns the result
+# It also takes an optional starting day of the week and adjusts the output accordingly
+# For example, if start = "3:00 PM", duration = "3:10", and day = "Wednesday"
+# The output is "6:10 PM, Wednesday"
+
+# Import datetime module to work with time objects
+import datetime
+
+# Define a dictionary to map day names to numbers
+day_dict = {"monday": 0, "tuesday": 1, "wednesday": 2, "thursday": 3, "friday": 4, "saturday": 5, "sunday": 6}
+
+# Define a function to add time
+def add_time(start, duration, day=None):
+    # Split the start time into hours, minutes, and period
+    start_hour, start_min_period = start.split(":")
+    start_min, start_period = start_min_period.split()
+
+    # Convert the start time to a 24-hour format
+    if start_period == "PM" and start_hour != "12":
+        start_hour = str(int(start_hour) + 12)
+    elif start_period == "AM" and start_hour == "12":
+        start_hour = "0"
+
+    # Create a datetime object for the start time
+    start_time = datetime.datetime(2024, 2, 20, int(start_hour), int(start_min))
+
+    # Split the duration into hours and minutes
+    duration_hour, duration_min = duration.split(":")
+
+    # Create a timedelta object for the duration
+    duration_delta = datetime.timedelta(hours=int(duration_hour), minutes=int(duration_min))
+
+    # Add the duration to the start time
+    end_time = start_time + duration_delta
+
+    # Format the end time to a 12-hour format
+    end_hour = end_time.strftime("%I")
+    end_min = end_time.strftime("%M")
+    end_period = end_time.strftime("%p")
+
+    # Calculate the number of days passed
+    days_passed = end_time.day - start_time.day
+
+    # Initialize the output string
+    output = f"{end_hour}:{end_min} {end_period}"
+
+    # If a day is given, adjust the output accordingly
+    if day:
+        # Convert the day to lowercase
+        day = day.lower()
+        # Get the number of the starting day
+        start_day_num = day_dict[day]
+        # Get the number of the ending day
+        end_day_num = (start_day_num + days_passed) % 7
+        # Get the name of the ending day
+        end_day = list(day_dict.keys())[end_day_num]
+        # Capitalize the first letter of the ending day
+        end_day = end_day.capitalize()
+        # Add the ending day to the output
+        output += f", {end_day}"
+
+    # If more than one day has passed, add the number of days to the output
+    if days_passed > 1:
+        output += f" ({days_passed} days later)"
+    # If one day has passed, add "(next day)" to the output
+    elif days_passed == 1:
+        output += " (next day)"
+
+    # Return the output
+    return output
