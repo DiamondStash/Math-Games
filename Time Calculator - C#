@@ -1,0 +1,96 @@
+// Time Calculator
+
+// This program adds a duration to a start time and returns the result
+// It also takes an optional starting day of the week and adjusts the output accordingly
+// For example, if start = "3:00 PM", duration = "3:10", and day = "Wednesday"
+// The output is "6:10 PM, Wednesday"
+
+// Import System namespace to work with time objects
+using System;
+
+// Define a class to hold the program logic
+class TimeCalculator
+{
+    // Define a dictionary to map day names to numbers
+    private static readonly Dictionary<string, int> dayDict = new Dictionary<string, int>()
+    {
+        {"monday", 0}, {"tuesday", 1}, {"wednesday", 2}, {"thursday", 3}, {"friday", 4}, {"saturday", 5}, {"sunday", 6}
+    };
+
+    // Define a method to add time
+    public static string AddTime(string start, string duration, string day = null)
+    {
+        // Split the start time into hours, minutes, and period
+        string[] startHourMinPeriod = start.Split(":");
+        string startHour = startHourMinPeriod[0];
+        string[] startMinPeriod = startHourMinPeriod[1].Split();
+        string startMin = startMinPeriod[0];
+        string startPeriod = startMinPeriod[1];
+
+        // Convert the start time to a 24-hour format
+        if (startPeriod == "PM" && startHour != "12")
+        {
+            startHour = (int.Parse(startHour) + 12).ToString();
+        }
+        else if (startPeriod == "AM" && startHour == "12")
+        {
+            startHour = "0";
+        }
+
+        // Create a DateTime object for the start time
+        DateTime startTime = new DateTime(2024, 2, 20, int.Parse(startHour), int.Parse(startMin), 0);
+
+        // Split the duration into hours and minutes
+        string[] durationHourMin = duration.Split(":");
+        string durationHour = durationHourMin[0];
+        string durationMin = durationHourMin[1];
+
+        // Create a TimeSpan object for the duration
+        TimeSpan durationDelta = new TimeSpan(int.Parse(durationHour), int.Parse(durationMin), 0);
+
+        // Add the duration to the start time
+        DateTime endTime = startTime.Add(durationDelta);
+
+        // Format the end time to a 12-hour format
+        string endHour = endTime.ToString("hh");
+        string endMin = endTime.ToString("mm");
+        string endPeriod = endTime.ToString("tt");
+
+        // Calculate the number of days passed
+        int daysPassed = endTime.Day - startTime.Day;
+
+        // Initialize the output string
+        string output = $"{endHour}:{endMin} {endPeriod}";
+
+        // If a day is given, adjust the output accordingly
+        if (day != null)
+        {
+            // Convert the day to lowercase
+            day = day.ToLower();
+            // Get the number of the starting day
+            int startDayNum = dayDict[day];
+            // Get the number of the ending day
+            int endDayNum = (startDayNum + daysPassed) % 7;
+            // Get the name of the ending day
+            string endDay = dayDict.Keys.ElementAt(endDayNum);
+            // Capitalize the first letter of the ending day
+            endDay = char.ToUpper(endDay[0]) + endDay.Substring(1);
+            // Add the ending day to the output
+            output += $", {endDay}";
+        }
+
+        // If more than one day has passed, add the number of days to the output
+        if (daysPassed > 1)
+        {
+            output += $" ({daysPassed} days later)";
+        }
+        // If one day has passed, add "(next day)" to the output
+        else if (daysPassed == 1)
+        {
+            output += " (next day)";
+        }
+
+        // Return the output
+        return output;
+    }
+}
