@@ -1,6 +1,9 @@
 # Number Pattern
 # This program prints a number pattern with n rows and n columns
 
+# Number Pattern
+# This program prints a number pattern with n rows and n columns
+
 # For example, if n = 5, the output is:
 # 1 2 3 4 5
 # 2 4 6 8 10
@@ -11,19 +14,9 @@
 # Get the value of n from the user
 n = int(input("Enter the value of n: "))
 
-# Initialize an empty list to store the pattern
-pattern = []
-
-# Loop through the rows
+# Loop through the rows and columns, printing each row directly
 for i in range(1, n + 1):
-    # Initialize an empty list to store the current row
-    row = []
-    # Loop through the columns
-    for j in range(1, n + 1):
-        # Append the product of i and j to the row
-        row.append(i * j)
-    # Append the row to the pattern
-    pattern.append(row)
+    print(" ".join(str(i * j) for j in range(1, n + 1)))
 
 # Print the pattern
 for row in pattern:
