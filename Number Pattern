@@ -20,6 +20,70 @@ for row in pattern:
     # Join the elements of the row with spaces
     print(" ".join(str(x) for x in row))
 
-fjtrihgkdgkdg
-tigrjffjg
-fidgidif
+
+
+
+```
+def print_number_pattern(n, operation=lambda x, y: x * y):
+    """
+    Prints a number pattern with n rows and n columns.
+
+    Args:
+        n (int): Number of rows and columns.
+        operation (function): Operation to apply to numbers (default: multiplication).
+    """
+    for i in range(1, n + 1):
+        print(" ".join(str(operation(i, j)) for j in range(1, n + 1)))
+
+def main():
+    while True:
+        try:
+            n = int(input("Enter the value of n: "))
+            if n <= 0:
+                print("Please enter a positive integer.")
+                continue
+            break
+        except ValueError:
+            print("Invalid input. Please enter an integer.")
+
+    print("Pattern options:")
+    print("1. Multiplication")
+    print("2. Addition")
+    print("3. Subtraction")
+    while True:
+        try:
+            choice = int(input("Enter your choice (1/2/3): "))
+            if choice < 1 or choice > 3:
+                print("Please enter 1, 2, or 3.")
+                continue
+            break
+        except ValueError:
+            print("Invalid input. Please enter an integer.")
+
+    operations = {
+        1: lambda x, y: x * y,
+        2: lambda x, y: x + y,
+        3: lambda x, y: x - y
+    }
+
+    print(f"\nPattern with n = {n} and operation:")
+    if choice == 1:
+        print("Multiplication")
+    elif choice == 2:
+        print("Addition")
+    elif choice == 3:
+        print("Subtraction")
+
+    print_number_pattern(n, operations[choice])
+
+if __name__ == "__main__":
+    main()
+```
+
+This code:
+
+1. Validates user input for `n`.
+2. Offers pattern options (multiplication, addition, subtraction).
+3. Uses a dictionary to map choices to operations.
+4. Includes docstrings for better documentation.
+5. Separates concerns into `print_number_pattern` and `main` functions.
